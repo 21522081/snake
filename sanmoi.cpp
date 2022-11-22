@@ -11,7 +11,7 @@ using namespace std;
 
 #define width 40
 #define height 20
-#define body '*'
+#define BODY '*'
 #define APPLE 'O'
 
 struct Point
@@ -115,6 +115,7 @@ bool BodyHitted()
 }
 Point apple;
 Point prevTail;
+int score = 0;
 
 void genApple()
 {
@@ -125,7 +126,7 @@ void genApple()
         x,
         y,
     };
-    // Sau khi có tọa độ quả táo thì vẽ lên màn hình
+    // Sau khi có t?a ?? qu? táo thì v? lên màn hình
     gotoxy(x, y);
     cout << APPLE;
 }
@@ -140,6 +141,10 @@ bool isBiteItself()
         if (head.x == snake[i].x && head.y == snake[i].y)
             return true;
     return false;
+}
+bool isHitWall()
+{
+    return snake[0].x == 0 || snake[0].y == 0 || snake[0].x == width || snake[0].y == height;
 }
 void ShowConsoleCursor(bool showFlag)
 {
@@ -158,12 +163,61 @@ void displayScore()
     gotoxy(width + 5, 2);
     cout << "Your score: " << score;
 }
-
+  int speed = 100;
 int main()
 {
-    //DrawSnake();
-    int speed = 100;
-    void showEndMenu()
+    showStartMenu();
+    return 0;
+}
+void resetSnake()
+{
+    score = 0;
+    direction = Direction::right;
+    snake = {
+        Point{ width / 2 + 2, height / 2 },
+        Point{ width / 2 + 1, height / 2 },
+        Point{ width / 2, height / 2 },
+        Point{ width / 2 - 1, height / 2 },
+        Point{ width / 2 - 2, height / 2 }
+    };
+}
+void showStartMenu()
+{
+    system("cls");
+    cout << "Welcome to snake game!" << endl;
+    cout << "Options:" << endl;
+    cout << "1. Start" << endl;
+    cout << "2. Quit" << endl;
+    cout << "Your choice: ";
+    int option;
+    cin >> option;
+    if (option == 1)
+    {
+        system("cls");
+        cout << "Choose your level (1 - 5): ";
+        int t;
+        cin >> t;
+        speed = 600 - t * 100; // Calculate speed depend on level
+        system("cls");
+        cout << "Tip: While playing game, you can press 'q' to quit";
+        gotoxy(0, 3);
+        cout << "Ready!";
+        Sleep(1000);
+        for (size_t i = 3; i > 0; i--)
+        {
+            gotoxy(0, 3);
+            cout << i << "         ";
+            Sleep(1000);
+        }
+        gotoxy(0, 3);
+        cout << "GO!";
+        Sleep(1000);
+        startGame();
+    }
+    else if (option == 2)
+        exit(1);
+}
+   void showEndMenu()
 {
 	system("cls");
 	gotoxy(0, 0);
@@ -181,60 +235,110 @@ int main()
 	else if (option == 'n')
 		exit(1);
 }
-    
-    while (1)
-    {
-        if (_kbhit())
-        {
-            char ch = _getch();
-            ch = tolower(ch);
-            if (ch == 'a')
-                direction = Direction::left;
-            else if (ch == 'd')
-                direction = Direction::right;
-            else if (ch == 's')
-                direction = Direction::down;
-            else if (ch == 'w')
-                direction = Direction::up;
-            else if (ch == 'q')
-                break;
-        }
-        Move();
-        DrawSnake();
-        Boder();
-        if (WallHitted())
-            break;
-        if (BodyHitted())
-            break;
-        system("cls");
+   void drawBox()
+   {
+       for (size_t i = 0; i < width; i++)
+           cout << '=';
+       gotoxy(0, height);
+       for (size_t i = 0; i < width; i++)
+           cout << '=';
+       for (size_t i = 1; i < height; i++)
+       {
+           gotoxy(0, i);
+           cout << '|';
+       }
+       for (size_t i = 1; i < height; i++)
+       {
+           gotoxy(width, i);
+           cout << '|';
+       }
+   }
+   void move()
+   {
+       prevTail = snake.back();
+       for (size_t i = snake.size() - 1; i > 0; i--)
+           snake[i] = snake[i - 1];
+       if (direction == Direction::up)
+           snake[0].y -= 1;
+       else if (direction == Direction::down)
+           snake[0].y += 1;
+       else if (direction == Direction::left)
+           snake[0].x -= 1;
+       else if (direction == Direction::right)
+           snake[0].x += 1;
+   }
+   void drawHeadnTail()
+   {
+       gotoxy(snake[0].x, snake[0].y);
+       cout << BODY;
+       gotoxy(prevTail.x, prevTail.y);
+       cout << ' '; // Clear the old tail
+   }
+   void startGame()
+   {
+       system("cls");
+       ShowConsoleCursor(false);
 
-    }
-    ShowConsoleCursor(false);
-    genApple();
-    int score = 0;
-    displayScore();
-    if (isAteApple())
-    {
-        score++;
-        displayScore();
-        growing();
-        genApple();
-    }
-    if (isBiteItself())
-    {
-        ShowConsoleCursor(true);
-        showEndMenu();
-        break;
-    }
-    if (isHitWall())
-    {
-        ShowConsoleCursor(true);
-        showEndMenu();
-        break;
-    }
+       drawBox();
+       drawSnake();
+       genApple();
+       displayScore();
 
-    return 0;
-}
+       while (true)
+       {
+           if (_kbhit())
+           {
+               char ch = _getch();
+               ch = tolower(ch);
+               if (ch == 'a' && direction != Direction::right)
+                   direction = Direction::left;
+               else if (ch == 'w' && direction != Direction::down)
+                   direction = Direction::up;
+               else if (ch == 's' && direction != Direction::up)
+                   direction = Direction::down;
+               else if (ch == 'd' && direction != Direction::left)
+                   direction = Direction::right;
+               else if (ch == 'q') // Quit game
+               {
+                   showEndMenu();
+                   break;
+               }
+           }
+           move();
+           drawHeadnTail();
+           if (isAteApple())
+           {
+               score++;
+               displayScore();
+               growing();
+               genApple();
+           }
+           if (isBiteItself())
+           {
+               ShowConsoleCursor(true);
+               showEndMenu();
+               break;
+           }
+           if (isHitWall())
+           {
+               ShowConsoleCursor(true);
+               showEndMenu();
+               break;
+           }
+           Sleep(speed);
+       }
+   }
+   void drawSnakePart(Point p)
+   {
+       gotoxy(p.x, p.y);
+       cout << BODY;
+   }
+   void drawSnake()
+   {
+       for (size_t i = 0; i < snake.size(); i++)
+           drawSnakePart(snake[i]);
+   }
+ 
 
 void gotoxy(int column, int line)
 {

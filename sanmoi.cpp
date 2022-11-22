@@ -126,7 +126,7 @@ void genApple()
         x,
         y,
     };
-    // Sau khi có t?a ?? qu? táo thì v? lên màn hình
+
     gotoxy(x, y);
     cout << APPLE;
 }
@@ -188,13 +188,13 @@ void showStartMenu()
     cout << "Options:" << endl;
     cout << "1. Start" << endl;
     cout << "2. Quit" << endl;
-    cout << "Your choice: ";
+    cout << "Your choice:(1 or 2) ";
     int option;
     cin >> option;
     if (option == 1)
     {
         system("cls");
-        cout << "Choose your level (1 - 5): ";
+        cout << "Chọn level (1 - 5): ";
         int t;
         cin >> t;
         speed = 600 - t * 100; // Calculate speed depend on level

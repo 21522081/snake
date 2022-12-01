@@ -185,6 +185,7 @@ void drawHeadnTail()
        gotoxy(prevTail.x, prevTail.y);
        cout << ' '; // Clear the old tail
    }
+   //main
 void startGame()
    {
        system("cls");

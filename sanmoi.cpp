@@ -375,4 +375,4 @@ void displayScore()
     gotoxy(width + 5, 2);
     cout << "Your score: " << score;
 }
-\n
+

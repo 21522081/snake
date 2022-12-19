@@ -295,27 +295,6 @@ void Move()
         snake[0].x -= 1;
 }
 
-void Boder()
-{
-    for (size_t i = 0; i < 60; i++)
-    {
-        cout << '-';
-        gotoxy(0, 25);
-    }
-    for (size_t i = 0; i <= 60; i++)
-        cout << '-';
-    for (size_t i = 1; i < 25; i++)
-    {
-        gotoxy(0, i);
-        cout << '|';
-    }
-    for (size_t i = 1; i < 25; i++)
-    {
-        gotoxy(60, i);
-        cout << '|';
-    }
-}
-
 bool WallHitted()
 {
     return snake[0].x == 0 || snake[0].y == 0 || snake[0].x == 60 || snake[0].y == 25;

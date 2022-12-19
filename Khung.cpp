@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <conio.h>
+
 using namespace std;
 
 const int width = 20;
@@ -73,26 +74,24 @@ void Move()
         snake[0].x -= 1;
 }
 
-void Boder()
-{
-    for (size_t i = 0; i < 60; i++)
-    {
-        cout << '-';
-        gotoxy(0, 25);
-    }
-	for (size_t i = 0; i <= 60; i++)
-        cout << '-';
-	for (size_t i = 1; i < 25; i++)
-	{
-		gotoxy(0, i);
-		cout << '|';
-	}
-	for (size_t i = 1; i < 25; i++)
-	{
-		gotoxy(60, i);
-		cout << '|';
-	}
-}
+void drawBox()
+   {
+       for (size_t i = 0; i < width; i++)
+           cout << '=';
+       gotoxy(0, height);
+       for (size_t i = 0; i < width; i++)
+           cout << '=';
+       for (size_t i = 1; i < height; i++)
+       {
+           gotoxy(0, i);
+           cout << '|';
+       }
+       for (size_t i = 1; i < height; i++)
+       {
+           gotoxy(width, i);
+           cout << '|';
+       }
+   }
 
 bool WallHitted()
 {

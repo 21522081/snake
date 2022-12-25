@@ -337,6 +337,7 @@ bool isHitWall()
 {
     return snake[0].x == 0 || snake[0].y == 0 || snake[0].x == width || snake[0].y == height;
 }
+// đặt tầm nhìn cho con trỏ
 void ShowConsoleCursor(bool showFlag)
 {
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
